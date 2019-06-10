@@ -12,6 +12,8 @@ import dlib
 import cv2
 import RPi.GPIO as GPIO
 
+#SETUP R-PI PINS
+
 GPIO.setmode(GPIO.BCM)
 
 GPIO.setup(23,GPIO.OUT)
@@ -135,9 +137,9 @@ while True:
 			COUNTER += 1
 
 			# if the eyes were closed for a sufficient number of
-			# frames, then sound the alarm
+			# frames, then: 
 			if COUNTER >= EYE_AR_CONSEC_FRAMES:
-				# if the alarm is not on, turn it on
+				# SOUND BUZZER, SEND ALERT USING SMS, SLOW DOWN MOTOR
 				GPIO.output(23,GPIO.HIGH)
 				GPIO.output(24,GPIO.HIGH)
                                 GPIO.output(3,GPIO.LOW)
@@ -149,6 +151,7 @@ while True:
 		# otherwise, the eye aspect ratio is not below the blink
 		# threshold, so reset the counter and alarm
 		else:
+			# STOP BUZZER, RESET OTHER PINS 
 			COUNTER = 0
 			GPIO.output(23,GPIO.LOW)
 			GPIO.output(24,GPIO.LOW)
@@ -168,10 +171,11 @@ while True:
 		break
 
 # do a bit of cleanup
+# RESET ALL PINS
 
 GPIO.output(23,GPIO.LOW)
 GPIO.output(24,GPIO.LOW)
 GPIO.output(4,GPIO.LOW)
- GPIO.output(3,GPIO.HIGH)
+GPIO.output(3,GPIO.LOW)
 cv2.destroyAllWindows()
 vs.stop()
